@@ -1,940 +1,1512 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DUMMY Tools - Fake Lobby FF</title>
-    <link rel="icon" type="image/jpg" href="https://files.catbox.moe/eoyme6.jpg">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-            -webkit-tap-highlight-color: transparent;
-            outline: none;
-            user-select: none;
-            scroll-behavior: smooth;
-        }
-
-        :root {
-            --bg-primary: #0b0e1a;
-            --bg-secondary: #111628;
-            --bg-card: #161d35;
-            --bg-input: #0f152a;
-            --border-color: #1e2a4a;
-            --text-primary: #e8edff;
-            --text-secondary: #7a8bb5;
-            --accent: #4f8cff;
-            --accent-glow: rgba(79, 140, 255, 0.25);
-            --accent-dark: #2a5fc1;
-            --gradient-blue: linear-gradient(135deg, #4f8cff, #2a5fc1);
-            --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.4);
-            --radius: 18px;
-            --radius-sm: 12px;
-        }
-
-        body {
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
-
-        .app-wrapper {
-            width: 100%;
-            max-width: 420px;
-            height: 100vh;
-            background: var(--bg-secondary);
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            box-shadow: 0 0 80px rgba(79, 140, 255, 0.03);
-        }
-
-        @media(min-width: 460px) {
-            body {
-                align-items: center;
-            }
-            .app-wrapper {
-                height: 95vh;
-                border-radius: 28px;
-                border: 1px solid rgba(79, 140, 255, 0.08);
-            }
-        }
-
-        .header {
-            padding: 18px 22px 14px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(79, 140, 255, 0.06);
-            background: rgba(11, 14, 26, 0.6);
-            backdrop-filter: blur(12px);
-            flex-shrink: 0;
-            z-index: 10;
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .header-icon {
-            width: 38px;
-            height: 38px;
-            border-radius: var(--radius-sm);
-            background: var(--gradient-blue);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            color: white;
-            box-shadow: 0 4px 16px rgba(79, 140, 255, 0.25);
-        }
-
-        .header-title {
-            font-size: 18px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            color: var(--text-primary);
-        }
-
-        .header-title span {
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-
-        .header-right {
-            display: flex;
-            gap: 8px;
-        }
-
-        .btn-icon {
-            width: 38px;
-            height: 38px;
-            border-radius: var(--radius-sm);
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            color: var(--text-secondary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .btn-icon:active {
-            transform: scale(0.92);
-            background: rgba(79, 140, 255, 0.1);
-            border-color: rgba(79, 140, 255, 0.2);
-        }
-
-        .content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 16px 20px 100px;
-            scrollbar-width: none;
-        }
-
-        .content::-webkit-scrollbar {
-            display: none;
-        }
-
-        .video-banner {
-            position: relative;
-            width: 100%;
-            border-radius: var(--radius);
-            overflow: hidden;
-            margin-bottom: 22px;
-            border: 1px solid rgba(79, 140, 255, 0.06);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            aspect-ratio: 16/9;
-            background: #080b18;
-        }
-
-        .video-banner video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .video-banner .badge-video {
-            position: absolute;
-            bottom: 10px;
-            right: 12px;
-            background: rgba(0, 0, 0, 0.55);
-            backdrop-filter: blur(6px);
-            padding: 4px 14px;
-            border-radius: 20px;
-            font-size: 9px;
-            color: var(--text-secondary);
-            border: 1px solid rgba(79, 140, 255, 0.08);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            letter-spacing: 0.5px;
-        }
-
-        .video-banner .badge-video i {
-            color: var(--accent);
-            font-size: 10px;
-        }
-
-        .video-banner .badge-top {
-            position: absolute;
-            top: 12px;
-            left: 12px;
-            background: rgba(79, 140, 255, 0.15);
-            backdrop-filter: blur(6px);
-            padding: 4px 14px;
-            border-radius: 20px;
-            font-size: 9px;
-            font-weight: 700;
-            color: var(--accent);
-            border: 1px solid rgba(79, 140, 255, 0.1);
-            letter-spacing: 0.5px;
-        }
-
-        .card {
-            background: var(--bg-card);
-            border-radius: var(--radius);
-            padding: 20px;
-            margin-bottom: 18px;
-            border: 1px solid rgba(79, 140, 255, 0.04);
-            box-shadow: var(--shadow-card);
-        }
-
-        .card-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 16px;
-        }
-
-        .card-header .icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            background: rgba(79, 140, 255, 0.08);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            color: var(--accent);
-        }
-
-        .card-header h3 {
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-
-        .card-header h3 small {
-            font-weight: 400;
-            font-size: 11px;
-            color: var(--text-secondary);
-            display: block;
-            margin-top: 1px;
-        }
-
-        .input-group {
-            margin-bottom: 16px;
-        }
-
-        .input-group:last-child {
-            margin-bottom: 0;
-        }
-
-        .input-group label {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 11px;
-            font-weight: 600;
-            color: var(--text-secondary);
-            margin-bottom: 8px;
-            letter-spacing: 0.3px;
-            text-transform: uppercase;
-        }
-
-        .input-group label i {
-            font-size: 13px;
-            color: var(--accent);
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: 13px 16px;
-            background: var(--bg-input);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-sm);
-            color: var(--text-primary);
-            font-size: 15px;
-            font-weight: 500;
-            transition: 0.25s;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .input-group input:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(79, 140, 255, 0.08);
-        }
-
-        .input-group input::placeholder {
-            color: var(--text-secondary);
-            font-weight: 400;
-            font-size: 14px;
-        }
-
-        .btn-generate {
-            width: 100%;
-            padding: 15px;
-            border: none;
-            border-radius: var(--radius-sm);
-            background: var(--gradient-blue);
-            color: white;
-            font-size: 15px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            cursor: pointer;
-            transition: 0.3s;
-            box-shadow: 0 4px 24px rgba(79, 140, 255, 0.2);
-            position: relative;
-            overflow: hidden;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .btn-generate:active {
-            transform: scale(0.97);
-        }
-
-        .btn-generate i {
-            font-size: 18px;
-        }
-
-        .btn-generate .loader {
-            display: none;
-            animation: spin 0.8s linear infinite;
-            font-size: 18px;
-        }
-
-        .btn-generate.loading .loader {
-            display: inline-block;
-        }
-
-        .btn-generate.loading .btn-text {
-            display: none;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        .result-card {
-            display: none;
-            margin-top: 0;
-        }
-
-        .result-card.show {
-            display: block;
-        }
-
-        .preview-container {
-            background: rgba(8, 11, 24, 0.8);
-            border-radius: var(--radius-sm);
-            min-height: 220px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            border: 1px solid rgba(79, 140, 255, 0.04);
-            position: relative;
-        }
-
-        .preview-container img {
-            width: 100%;
-            max-height: 420px;
-            object-fit: contain;
-            border-radius: 10px;
-            display: block;
-        }
-
-        .preview-placeholder {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--text-secondary);
-        }
-
-        .preview-placeholder i {
-            font-size: 40px;
-            color: rgba(79, 140, 255, 0.12);
-            margin-bottom: 12px;
-            display: block;
-        }
-
-        .preview-placeholder p {
-            font-size: 13px;
-            line-height: 1.6;
-        }
-
-        .preview-loading {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--text-secondary);
-        }
-
-        .preview-loading i {
-            font-size: 32px;
-            color: var(--accent);
-            display: block;
-            margin-bottom: 12px;
-            animation: spin 1s linear infinite;
-        }
-
-        .preview-loading p {
-            font-size: 13px;
-        }
-
-        .btn-download {
-            width: 100%;
-            padding: 13px;
-            border: none;
-            border-radius: var(--radius-sm);
-            background: rgba(16, 185, 129, 0.08);
-            border: 1px solid rgba(16, 185, 129, 0.15);
-            color: #34d399;
-            font-size: 13px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            cursor: pointer;
-            transition: 0.2s;
-            margin-top: 12px;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .btn-download:active {
-            transform: scale(0.97);
-            background: rgba(16, 185, 129, 0.15);
-        }
-
-        .btn-download i {
-            font-size: 16px;
-        }
-
-        .features {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 4px;
-        }
-
-        .feature {
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: var(--radius-sm);
-            padding: 14px 10px;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            transition: 0.2s;
-            cursor: default;
-        }
-
-        .feature:active {
-            transform: scale(0.96);
-            background: rgba(79, 140, 255, 0.04);
-        }
-
-        .feature i {
-            font-size: 20px;
-            color: var(--accent);
-            display: block;
-            margin-bottom: 4px;
-        }
-
-        .feature h6 {
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--text-primary);
-            letter-spacing: 0.3px;
-        }
-
-        .feature p {
-            font-size: 9px;
-            color: var(--text-secondary);
-            margin-top: 2px;
-        }
-
-        .promo {
-            margin-top: 20px;
-            background: var(--gradient-blue);
-            border-radius: var(--radius);
-            padding: 18px 22px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .promo::after {
-            content: '';
-            position: absolute;
-            top: -40%;
-            right: -20%;
-            width: 120px;
-            height: 120px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 50%;
-            pointer-events: none;
-        }
-
-        .promo h4 {
-            font-size: 15px;
-            font-weight: 800;
-            color: white;
-            position: relative;
-            z-index: 2;
-        }
-
-        .promo p {
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.7);
-            position: relative;
-            z-index: 2;
-            margin-top: 2px;
-        }
-
-        .promo i {
-            position: absolute;
-            bottom: -10px;
-            right: 10px;
-            font-size: 56px;
-            color: rgba(255, 255, 255, 0.04);
-            transform: rotate(-12deg);
-        }
-
-        .footer {
-            text-align: center;
-            padding: 16px 20px 8px;
-            font-size: 10px;
-            color: var(--text-secondary);
-            border-top: 1px solid rgba(79, 140, 255, 0.03);
-            margin-top: 6px;
-            letter-spacing: 0.3px;
-        }
-
-        .footer i {
-            color: #ef4444;
-            font-size: 9px;
-        }
-
-        .footer strong {
-            color: var(--accent);
-            font-weight: 700;
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%) translateY(80px);
-            background: var(--bg-card);
-            border: 1px solid rgba(79, 140, 255, 0.08);
-            padding: 12px 24px;
-            border-radius: var(--radius-sm);
-            color: var(--text-primary);
-            font-size: 13px;
-            font-weight: 500;
-            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5);
-            opacity: 0;
-            transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            backdrop-filter: blur(12px);
-            pointer-events: none;
-        }
-
-        .toast.show {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-            pointer-events: auto;
-        }
-
-        .toast i {
-            font-size: 18px;
-            color: var(--accent);
-        }
-
-        .fab {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            z-index: 50;
-        }
-
-        .fab button {
-            width: 52px;
-            height: 52px;
-            border-radius: 16px;
-            background: var(--gradient-blue);
-            color: white;
-            border: none;
-            font-size: 22px;
-            box-shadow: 0 8px 32px rgba(79, 140, 255, 0.25);
-            cursor: pointer;
-            transition: 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .fab button:active {
-            transform: scale(0.92);
-        }
-
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 200;
-            opacity: 0;
-            pointer-events: none;
-            transition: 0.3s;
-            backdrop-filter: blur(6px);
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-        }
-
-        .modal-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .modal-sheet {
-            width: 100%;
-            max-width: 420px;
-            background: var(--bg-secondary);
-            border-radius: 24px 24px 0 0;
-            padding: 24px 28px 32px;
-            transform: translateY(100%);
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-
-        .modal-overlay.active .modal-sheet {
-            transform: translateY(0);
-        }
-
-        .modal-sheet .handle {
-            width: 40px;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 4px;
-            margin: 0 auto 16px;
-        }
-
-        .modal-sheet .modal-title {
-            font-size: 18px;
-            font-weight: 800;
-            color: var(--text-primary);
-            text-align: center;
-            margin-bottom: 16px;
-        }
-
-        .modal-sheet .modal-body {
-            background: var(--bg-card);
-            border-radius: var(--radius);
-            padding: 24px;
-            text-align: center;
-            border: 1px solid rgba(79, 140, 255, 0.04);
-        }
-
-        .modal-sheet .modal-body i {
-            font-size: 44px;
-            color: var(--accent);
-        }
-
-        .modal-sheet .modal-body h4 {
-            margin: 12px 0 6px;
-            color: var(--text-primary);
-            font-size: 16px;
-        }
-
-        .modal-sheet .modal-body p {
-            color: var(--text-secondary);
-            font-size: 13px;
-            line-height: 1.6;
-        }
-
-        .modal-sheet .modal-body strong {
-            color: var(--text-primary);
-        }
-
-        .modal-sheet .btn-close-modal {
-            width: 100%;
-            padding: 14px;
-            border-radius: var(--radius-sm);
-            border: none;
-            background: var(--gradient-blue);
-            color: white;
-            font-weight: 700;
-            font-size: 14px;
-            margin-top: 14px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .modal-sheet .btn-close-modal:active {
-            transform: scale(0.97);
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Belajar HTML dari Nol</title>
+<meta name="description" content="Belajar HTML dari nol melalui penjelasan sederhana, contoh kode, playground interaktif, dan kuis.">
+<style>
+    :root {
+        --bg: #0A0A0F;
+        --panel: #141416;
+        --panel-2: #1C1C1F;
+        --primary: #00D4FF;
+        --primary-soft: rgba(0, 212, 255, 0.12);
+        --primary-dim: #0A8CA6;
+        --text: #F4F9F4;
+        --muted: #A0A0A8;
+        --border: rgba(255, 255, 255, 0.08);
+        --border-strong: rgba(255, 255, 255, 0.16);
+        --success: #38D996;
+        --danger: #FF5C7A;
+        --radius: 14px;
+        --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+        --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    [data-theme="light"] {
+        --bg: #F5F7FA;
+        --panel: #FFFFFF;
+        --panel-2: #EEF1F5;
+        --text: #101014;
+        --muted: #55565F;
+        --border: rgba(0, 0, 0, 0.08);
+        --border-strong: rgba(0, 0, 0, 0.16);
+        --primary-soft: rgba(0, 150, 190, 0.1);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+        margin: 0;
+        background-color: var(--bg);
+        background-image:
+            radial-gradient(circle at 15% 0%, rgba(0, 212, 255, 0.08), transparent 45%),
+            radial-gradient(circle at 85% 10%, rgba(0, 212, 255, 0.05), transparent 40%);
+        color: var(--text);
+        font-family: var(--sans);
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        transition: background-color .2s ease, color .2s ease;
+    }
+
+    h1, h2, h3, h4 { margin: 0 0 .5em 0; line-height: 1.25; font-weight: 700; letter-spacing: -.01em; }
+    p { margin: 0 0 1em 0; color: var(--muted); max-width: 68ch; }
+    a { color: var(--primary); }
+    ul, ol { color: var(--muted); }
+    code { font-family: var(--mono); }
+
+    a:focus-visible, button:focus-visible, input:focus-visible,
+    textarea:focus-visible, select:focus-visible, [tabindex]:focus-visible {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+    }
+
+    img { max-width: 100%; display: block; }
+    .wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+    section { padding: 72px 0; border-bottom: 1px solid var(--border); }
+    section:last-of-type { border-bottom: none; }
+    .section-head { max-width: 720px; margin: 0 auto 40px; text-align: center; }
+    .section-head h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); }
+    .section-head.left { text-align: left; margin-left: 0; }
+
+    .sr-only {
+        position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+        overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+    }
+
+    /* ---------- HEADER ---------- */
+    .site-header {
+        position: sticky; top: 0; z-index: 50;
+        background: rgba(10, 10, 15, 0.85);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid var(--border);
+    }
+    [data-theme="light"] .site-header { background: rgba(245, 247, 250, 0.9); }
+
+    .site-header .wrap {
+        display: flex; align-items: center; justify-content: space-between;
+        gap: 16px; padding-top: 14px; padding-bottom: 14px;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .brand-logo {
+        width: 34px; height: 34px; border-radius: 9px; flex-shrink: 0;
+        background: linear-gradient(135deg, var(--primary), var(--primary-dim));
+        display: flex; align-items: center; justify-content: center;
+        font-weight: 800; color: #041014; font-family: var(--mono); font-size: .95rem;
+    }
+    .brand-text { display: flex; flex-direction: column; gap: 1px; }
+    .brand-name { font-size: 1rem; font-weight: 700; color: var(--text); }
+    .brand-tagline { font-size: .74rem; color: var(--muted); }
+
+    .main-nav ul { list-style: none; display: flex; gap: 2px; margin: 0; padding: 0; }
+    .main-nav a {
+        display: inline-block; color: var(--muted); text-decoration: none;
+        font-size: .9rem; padding: 8px 12px; border-radius: 8px;
+        transition: color .15s ease, background-color .15s ease;
+    }
+    .main-nav a:hover, .main-nav a.active { color: var(--text); background: var(--panel-2); }
+
+    .header-actions { display: flex; align-items: center; gap: 8px; }
+    .icon-btn {
+        width: 38px; height: 38px; border-radius: 9px; border: 1px solid var(--border-strong);
+        background: var(--panel); color: var(--text); cursor: pointer;
+        display: flex; align-items: center; justify-content: center; font-size: 1rem;
+    }
+    .icon-btn:hover { border-color: var(--primary); color: var(--primary); }
+
+    .menu-toggle { display: none; }
+
+    /* ---------- BUTTONS ---------- */
+    .btn {
+        display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+        font-size: .92rem; font-weight: 600; text-decoration: none;
+        padding: 11px 20px; border-radius: 10px; border: 1px solid transparent;
+        cursor: pointer; transition: transform .15s ease, background-color .15s ease, border-color .15s ease;
+        font-family: inherit;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-primary { background: var(--primary); color: #041014; }
+    .btn-primary:hover { background: #33ddff; }
+    .btn-secondary { background: transparent; color: var(--text); border-color: var(--border-strong); }
+    .btn-secondary:hover { border-color: var(--primary); color: var(--primary); }
+    .btn-small { padding: 7px 12px; font-size: .8rem; border-radius: 8px; }
+    .btn-danger { background: transparent; color: var(--danger); border-color: rgba(255,92,122,.4); }
+    .btn-danger:hover { background: rgba(255,92,122,.1); }
+    .btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+
+    /* ---------- HERO ---------- */
+    .hero { padding: 64px 0 80px; border-bottom: 1px solid var(--border); }
+    .hero .wrap { display: grid; grid-template-columns: 1.05fr 1fr; gap: 48px; align-items: center; }
+    .eyebrow-tag {
+        display: inline-block; font-size: .78rem; color: var(--primary);
+        background: var(--primary-soft); border: 1px solid rgba(0,212,255,.3);
+        padding: 5px 12px; border-radius: 999px; margin-bottom: 18px; font-weight: 600;
+    }
+    .hero h1 { font-size: clamp(2rem, 4vw, 2.9rem); color: var(--text); }
+    .hero p.lead { font-size: 1.05rem; }
+    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 26px; }
+
+    .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 44px; }
+    .stat-card {
+        background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
+        padding: 14px; text-align: center;
+    }
+    .stat-num { font-size: 1.3rem; font-weight: 800; color: var(--primary); }
+    .stat-label { font-size: .74rem; color: var(--muted); margin-top: 2px; }
+
+    .code-preview {
+        background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius);
+        overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,.4);
+    }
+    .code-preview-bar {
+        display: flex; align-items: center; gap: 8px; padding: 12px 16px;
+        background: var(--panel-2); border-bottom: 1px solid var(--border);
+    }
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot-red { background: #FF5C5C; } .dot-yellow { background: #FFC53D; } .dot-green { background: #38D996; }
+    .code-preview-title { margin-left: 8px; font-size: .78rem; color: var(--muted); font-family: var(--mono); }
+    .code-preview pre { margin: 0; padding: 20px; overflow-x: auto; }
+    .code-preview code { font-size: .85rem; line-height: 1.7; }
+    .code-preview-result {
+        border-top: 1px solid var(--border); padding: 18px 20px; background: var(--bg);
+    }
+    .code-preview-result-label { font-size: .7rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 10px; }
+
+    /* code coloring (manual, no libs) */
+    .tag { color: #FF79C6; } .attr { color: #50FA7B; } .str { color: #F1FA8C; } .cmt { color: #6272A4; }
+
+    /* ---------- CODE BLOCKS ---------- */
+    pre {
+        background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
+        padding: 16px; overflow-x: auto; position: relative;
+    }
+    pre code { font-family: var(--mono); font-size: .85rem; color: var(--text); white-space: pre; }
+    .code-block-wrap { position: relative; }
+    .copy-btn {
+        position: absolute; top: 10px; right: 10px; z-index: 2;
+    }
+
+    /* ---------- DASAR HTML ---------- */
+    .basics-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 40px; align-items: start; }
+    .analogy-list { padding-left: 18px; }
+    .analogy-list li { margin-bottom: 6px; color: var(--muted); }
+    .tag-explain { display: flex; flex-direction: column; gap: 12px; }
+    .tag-explain-item {
+        background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px;
+    }
+    .tag-explain-item code { color: var(--primary); font-weight: 700; display: block; margin-bottom: 4px; }
+    .tag-explain-item p { margin: 0; font-size: .88rem; }
+
+    /* ---------- ELEMEN HTML ---------- */
+    .elemen-controls { display: flex; flex-direction: column; gap: 16px; margin-bottom: 32px; }
+    .search-box {
+        display: flex; align-items: center; gap: 10px; background: var(--panel);
+        border: 1px solid var(--border-strong); border-radius: 12px; padding: 12px 16px;
+    }
+    .search-box input {
+        flex: 1; border: none; background: transparent; color: var(--text); font-size: .95rem; outline: none;
+    }
+    .search-box input::placeholder { color: var(--muted); }
+
+    .category-filters { display: flex; gap: 8px; flex-wrap: wrap; }
+    .filter-btn {
+        background: var(--panel); border: 1px solid var(--border-strong); color: var(--muted);
+        padding: 8px 16px; border-radius: 999px; font-size: .85rem; cursor: pointer;
+        font-family: inherit; transition: all .15s ease;
+    }
+    .filter-btn:hover { color: var(--text); border-color: var(--primary); }
+    .filter-btn.active { background: var(--primary); color: #041014; border-color: var(--primary); font-weight: 700; }
+
+    .element-grid {
+        display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px;
+    }
+    .element-card {
+        background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius);
+        padding: 20px; display: flex; flex-direction: column; gap: 8px; text-align: left;
+        cursor: pointer; transition: border-color .15s ease, transform .15s ease; position: relative;
+    }
+    .element-card:hover { border-color: var(--primary); transform: translateY(-2px); }
+    .element-card .tag-name { font-family: var(--mono); font-weight: 700; color: var(--primary); font-size: 1.05rem; }
+    .element-card .el-name { font-size: .82rem; color: var(--text); font-weight: 600; }
+    .element-card .el-desc { font-size: .82rem; color: var(--muted); margin: 0; }
+    .learned-badge {
+        position: absolute; top: 14px; right: 14px; font-size: .68rem; color: var(--success);
+        background: rgba(56,217,150,.12); border: 1px solid rgba(56,217,150,.35);
+        padding: 2px 8px; border-radius: 999px; display: none; font-weight: 700;
+    }
+    .element-card.learned .learned-badge { display: inline-block; }
+    .element-card .card-try { margin-top: 6px; align-self: flex-start; }
+
+    .empty-state {
+        text-align: center; padding: 48px 20px; color: var(--muted);
+        background: var(--panel); border: 1px dashed var(--border-strong); border-radius: var(--radius);
+        grid-column: 1 / -1;
+    }
+
+    /* ---------- PLAYGROUND ---------- */
+    .playground-toolbar { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 18px; }
+    .example-select {
+        background: var(--panel); border: 1px solid var(--border-strong); color: var(--text);
+        padding: 10px 14px; border-radius: 10px; font-size: .88rem; font-family: inherit; cursor: pointer;
+    }
+    .playground-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .pg-panel {
+        background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;
+    }
+    .pg-panel-bar {
+        display: flex; align-items: center; justify-content: space-between; padding: 10px 16px;
+        background: var(--panel-2); border-bottom: 1px solid var(--border); font-size: .78rem; color: var(--muted);
+        font-family: var(--mono);
+    }
+    #htmlEditor {
+        width: 100%; height: 380px; border: none; background: var(--bg); color: var(--text);
+        font-family: var(--mono); font-size: .88rem; padding: 16px; resize: vertical; outline: none; line-height: 1.6;
+    }
+    #htmlPreview { width: 100%; height: 380px; border: none; background: #fff; }
+
+    /* ---------- CONTOH ---------- */
+    .example-block {
+        background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius);
+        padding: 24px; margin-bottom: 20px;
+    }
+    .example-block h3 { font-size: 1.1rem; }
+    .example-note {
+        background: var(--primary-soft); border: 1px solid rgba(0,212,255,.25); border-radius: 10px;
+        padding: 12px 16px; font-size: .85rem; color: var(--text); margin-top: 14px;
+    }
+    .example-note code { color: var(--primary); }
+    .example-actions { margin-top: 16px; }
+    .demo-form { display: flex; flex-direction: column; gap: 12px; max-width: 420px; margin-top: 14px; }
+    .form-field { display: flex; flex-direction: column; gap: 5px; }
+    .form-field label { font-size: .82rem; color: var(--text); font-weight: 600; }
+    .form-field input, .form-field select, .form-field textarea {
+        background: var(--bg); border: 1px solid var(--border-strong); border-radius: 8px; color: var(--text);
+        padding: 9px 12px; font-family: inherit; font-size: .88rem;
+    }
+
+    /* ---------- KUIS ---------- */
+    .quiz-wrap {
+        max-width: 720px; margin: 0 auto; background: var(--panel); border: 1px solid var(--border);
+        border-radius: var(--radius); padding: 32px;
+    }
+    .quiz-progress { font-size: .78rem; color: var(--muted); margin-bottom: 10px; font-family: var(--mono); }
+    .quiz-progress-bar { height: 6px; background: var(--panel-2); border-radius: 999px; overflow: hidden; margin-bottom: 26px; }
+    .quiz-progress-fill { height: 100%; background: var(--primary); transition: width .3s ease; width: 0%; }
+    .quiz-question { font-size: 1.15rem; color: var(--text); margin-bottom: 20px; }
+    .quiz-options { display: flex; flex-direction: column; gap: 10px; }
+    .quiz-option {
+        text-align: left; background: var(--bg); border: 1px solid var(--border-strong); color: var(--text);
+        padding: 14px 16px; border-radius: 10px; cursor: pointer; font-size: .92rem; font-family: inherit;
+        transition: border-color .15s ease, background-color .15s ease;
+    }
+    .quiz-option:hover:not(:disabled) { border-color: var(--primary); }
+    .quiz-option.correct { border-color: var(--success); background: rgba(56,217,150,.12); color: var(--success); }
+    .quiz-option.incorrect { border-color: var(--danger); background: rgba(255,92,122,.12); color: var(--danger); }
+    .quiz-option:disabled { cursor: not-allowed; }
+    .quiz-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; }
+    .quiz-hint { font-size: .82rem; color: var(--muted); }
+    .quiz-result { text-align: center; }
+    .quiz-result .score-num { font-size: 3rem; font-weight: 800; color: var(--primary); margin: 12px 0; }
+    .quiz-result p { margin: 0 auto 20px; }
+
+    /* ---------- PROGRES ---------- */
+    .progress-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: 28px; }
+    .progress-card {
+        background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius);
+        padding: 24px; text-align: center;
+    }
+    .progress-card .num { font-size: 2rem; font-weight: 800; color: var(--primary); }
+    .progress-card .label { font-size: .85rem; color: var(--muted); margin-top: 4px; }
+    .progress-bar-outer {
+        height: 14px; background: var(--panel); border: 1px solid var(--border); border-radius: 999px;
+        overflow: hidden; margin-bottom: 10px;
+    }
+    .progress-bar-inner { height: 100%; background: linear-gradient(90deg, var(--primary-dim), var(--primary)); transition: width .4s ease; }
+    .progress-text { text-align: center; color: var(--muted); font-size: .88rem; margin-bottom: 24px; }
+    .progress-actions { text-align: center; }
+
+    /* ---------- TENTANG ---------- */
+    .about-card {
+        max-width: 720px; margin: 0 auto; background: var(--panel); border: 1px solid var(--border);
+        border-radius: var(--radius); padding: 32px; text-align: center;
+    }
+
+    /* ---------- FOOTER ---------- */
+    .site-footer { padding: 40px 0; }
+    .site-footer .wrap { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+    .footer-copy { font-size: .82rem; color: var(--muted); margin: 0; }
+
+    /* ---------- MODAL ---------- */
+    .modal-overlay {
+        position: fixed; inset: 0; background: rgba(0,0,0,.6); backdrop-filter: blur(3px);
+        display: none; align-items: center; justify-content: center; z-index: 100; padding: 20px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-box {
+        background: var(--panel); border: 1px solid var(--border-strong); border-radius: var(--radius);
+        max-width: 560px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 28px;
+        box-shadow: 0 30px 80px rgba(0,0,0,.5);
+    }
+    .modal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+    .modal-header .tag-name { font-family: var(--mono); font-size: 1.4rem; color: var(--primary); font-weight: 800; }
+    .modal-close {
+        background: var(--panel-2); border: 1px solid var(--border-strong); color: var(--text);
+        width: 32px; height: 32px; border-radius: 8px; cursor: pointer; font-size: 1rem; flex-shrink: 0;
+    }
+    .modal-section { margin-bottom: 16px; }
+    .modal-section h5 { margin: 0 0 6px; font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+    .modal-footer { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+
+    /* confirm modal */
+    .confirm-box { max-width: 380px; text-align: center; }
+    .confirm-actions { display: flex; gap: 10px; justify-content: center; margin-top: 20px; }
+
+    /* ---------- TOAST ---------- */
+    #toast-container {
+        position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+        z-index: 200; display: flex; flex-direction: column; gap: 8px; align-items: center;
+        width: 100%; padding: 0 16px; pointer-events: none;
+    }
+    .toast {
+        background: var(--panel); border: 1px solid var(--border-strong); color: var(--text);
+        padding: 12px 20px; border-radius: 10px; font-size: .88rem; box-shadow: 0 10px 30px rgba(0,0,0,.4);
+        opacity: 0; transform: translateY(10px); transition: opacity .25s ease, transform .25s ease;
+        max-width: 360px;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast.success { border-color: rgba(56,217,150,.5); }
+    .toast.error { border-color: rgba(255,92,122,.5); }
+
+    /* ---------- BACK TO TOP ---------- */
+    #backToTop {
+        position: fixed; bottom: 24px; right: 24px; width: 46px; height: 46px; border-radius: 50%;
+        background: var(--primary); color: #041014; border: none; font-size: 1.2rem; cursor: pointer;
+        display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 24px rgba(0,0,0,.35);
+        opacity: 0; visibility: hidden; transform: translateY(10px); transition: all .25s ease; z-index: 60;
+    }
+    #backToTop.show { opacity: 1; visibility: visible; transform: translateY(0); }
+
+    /* ---------- MOBILE NAV ---------- */
+    .mobile-nav-panel {
+        display: none; position: fixed; top: 65px; left: 0; right: 0; bottom: 0;
+        background: var(--bg); z-index: 45; padding: 24px; overflow-y: auto;
+    }
+    .mobile-nav-panel.open { display: block; }
+    .mobile-nav-panel ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+    .mobile-nav-panel a {
+        display: block; color: var(--text); text-decoration: none; font-size: 1.05rem;
+        padding: 14px 16px; border-radius: 10px; border-bottom: 1px solid var(--border);
+    }
+    .mobile-nav-panel a:active { background: var(--panel-2); }
+
+    /* ---------- RESPONSIVE ---------- */
+    @media (max-width: 900px) {
+        .hero .wrap { grid-template-columns: 1fr; }
+        .basics-grid { grid-template-columns: 1fr; }
+        .playground-grid { grid-template-columns: 1fr; }
+        .progress-grid { grid-template-columns: 1fr; }
+        .stat-row { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 760px) {
+        .main-nav { display: none; }
+        .menu-toggle { display: flex; }
+        section { padding: 52px 0; }
+        .element-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 520px) {
+        .wrap { padding: 0 16px; }
+        .element-grid { grid-template-columns: 1fr; }
+        .hero-actions { flex-direction: column; align-items: stretch; }
+        .brand-tagline { display: none; }
+        .quiz-wrap { padding: 20px; }
+        .modal-box { padding: 20px; }
+    }
+</style>
 </head>
-<body>
+<body data-theme="dark">
 
-    <div class="app-wrapper">
+<!-- ===================== HEADER ===================== -->
+<header class="site-header">
+    <div class="wrap">
+        <a href="#beranda" class="brand">
+            <span class="brand-logo">&lt;/&gt;</span>
+            <span class="brand-text">
+                <span class="brand-name">Belajar HTML</span>
+                <span class="brand-tagline">Belajar HTML dari nol dengan cara yang mudah dipahami.</span>
+            </span>
+        </a>
 
-        <header class="header">
-            <div class="header-left">
-                <div class="header-icon"><i class="ri-flashlight-fill"></i></div>
-                <div class="header-title">DUMMY Tools<span>Tools</span></div>
-            </div>
-            <div class="header-right">
-                <button class="btn-icon" id="btnInfo" onclick="openModal()"><i class="ri-information-line"></i></button>
-            </div>
-        </header>
+        <nav class="main-nav" aria-label="Navigasi utama">
+            <ul>
+                <li><a href="#beranda">Beranda</a></li>
+                <li><a href="#dasar-html">Dasar HTML</a></li>
+                <li><a href="#elemen-html">Elemen HTML</a></li>
+                <li><a href="#playground">Playground</a></li>
+                <li><a href="#kuis">Kuis</a></li>
+                <li><a href="#progres">Progres</a></li>
+            </ul>
+        </nav>
 
-        <main class="content" id="mainContent">
-
-            <div class="video-banner">
-                <video autoplay muted loop playsinline>
-                    <source src="https://c.termai.cc/v106/uwnywQx.mp4" type="video/mp4">
-                </video>
-                <span class="badge-top"><i class="ri-vidicon-fill"></i> DUMMY Tools</span>
-                <span class="badge-video"><i class="ri-video-line"></i> FREE FIRE</span>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <div class="icon"><i class="ri-gamepad-fill"></i></div>
-                    <h3>Fake Lobby FF <small>Free Fire Generator</small></h3>
-                </div>
-
-                <div class="input-group">
-                    <label><i class="ri-user-3-fill"></i> Nickname</label>
-                    <input type="text" id="lobbyNick" placeholder="Masukkan nickname..." value="DUMMY Tools">
-                </div>
-
-                <button class="btn-generate" id="generateBtn" onclick="generateLobby()">
-                    <i class="ri-flashlight-fill"></i>
-                    <span class="btn-text">Generate Lobby</span>
-                    <i class="ri-loader-4-line loader"></i>
-                </button>
-            </div>
-
-            <div class="card result-card" id="resultCard">
-                <div class="card-header">
-                    <div class="icon"><i class="ri-image-2-fill"></i></div>
-                    <h3>Hasil Lobby <small>Free Fire</small></h3>
-                </div>
-                <div class="preview-container" id="previewContainer">
-                    <div class="preview-placeholder">
-                        <i class="ri-image-line"></i>
-                        <p>Klik Generate untuk membuat lobby</p>
-                    </div>
-                </div>
-                <div id="downloadWrapper"></div>
-            </div>
-
-            <div class="features">
-                <div class="feature">
-                    <i class="ri-rocket-2-fill"></i>
-                    <h6>Super Cepat</h6>
-                    <p>Generate dalam detik</p>
-                </div>
-                <div class="feature">
-                    <i class="ri-save-3-fill"></i>
-                    <h6>Simpan Gambar</h6>
-                    <p>Download hasilnya</p>
-                </div>
-                <div class="feature">
-                    <i class="ri-open-arm-fill"></i>
-                    <h6>Gratis Selamanya</h6>
-                    <p>Tanpa batasan</p>
-                </div>
-            </div>
-
-            <div class="promo">
-                <h4>⚡ DUMMY Tools Tools</h4>
-                <p>Buat screenshot lobby FF dengan nickname custom</p>
-                <i class="ri-tools-line"></i>
-            </div>
-
-            <div class="footer">
-                Made with <i class="ri-heart-fill"></i> by <strong>DUMMY Tools</strong>
-            </div>
-
-        </main>
-    </div>
-
-    <div class="fab">
-        <button onclick="scrollToTop()"><i class="ri-arrow-up-line"></i></button>
-    </div>
-
-    <div class="toast" id="toast">
-        <i class="ri-checkbox-circle-fill"></i>
-        <span id="toastMsg">Berhasil!</span>
-    </div>
-
-    <div class="modal-overlay" id="modalOverlay">
-        <div class="modal-sheet">
-            <div class="handle"></div>
-            <div class="modal-title">ℹ️ Tentang</div>
-            <div class="modal-body">
-                <i class="ri-tools-line"></i>
-                <h4>DUMMY Tools Tools</h4>
-                <p>
-                    <strong>Fake Lobby Free Fire</strong><br>
-                    Buat screenshot lobby FF dengan nickname custom.<br><br>
-                    Hasil bisa di-download sebagai gambar PNG.<br><br>
-                    Created by <strong>DUMMY Tools</strong>
-                </p>
-            </div>
-            <button class="btn-close-modal" onclick="closeModal()">Tutup</button>
+        <div class="header-actions">
+            <button class="icon-btn" id="themeToggle" aria-label="Ganti mode terang atau gelap" title="Ganti tema">🌙</button>
+            <button class="icon-btn menu-toggle" id="menuToggle" aria-label="Buka menu navigasi" aria-expanded="false">☰</button>
         </div>
     </div>
 
-    <script>
-        let currentImageUrl = '';
-        let isGenerating = false;
-        const API_BASE = 'https://api.nexray.eu.cc/maker';
+    <div class="mobile-nav-panel" id="mobileNavPanel">
+        <ul>
+            <li><a href="#beranda">Beranda</a></li>
+            <li><a href="#dasar-html">Dasar HTML</a></li>
+            <li><a href="#elemen-html">Elemen HTML</a></li>
+            <li><a href="#playground">Playground</a></li>
+            <li><a href="#contoh">Contoh Penggunaan</a></li>
+            <li><a href="#kuis">Kuis</a></li>
+            <li><a href="#progres">Progres</a></li>
+            <li><a href="#tentang">Tentang</a></li>
+        </ul>
+    </div>
+</header>
 
-        async function generateLobby() {
-            if (isGenerating) return;
+<main>
 
-            const nickname = document.getElementById('lobbyNick').value.trim() || 'DUMMY Tools';
-            const btn = document.getElementById('generateBtn');
-            const resultCard = document.getElementById('resultCard');
-            const preview = document.getElementById('previewContainer');
-            const downloadWrapper = document.getElementById('downloadWrapper');
-
-            isGenerating = true;
-            btn.classList.add('loading');
-            resultCard.classList.add('show');
-            downloadWrapper.innerHTML = '';
-
-            preview.innerHTML = `
-                <div class="preview-loading">
-                    <i class="ri-loader-4-line"></i>
-                    <p>Membuat lobby FF...</p>
-                    <p style="font-size:11px;color:var(--text-secondary);margin-top:4px;">${nickname}</p>
+    <!-- ===================== HERO ===================== -->
+    <section id="beranda" class="hero" style="border-bottom:1px solid var(--border);">
+        <div class="wrap">
+            <div>
+                <span class="eyebrow-tag">Gratis &amp; untuk pemula</span>
+                <h1>Belajar HTML dari Nol</h1>
+                <p class="lead">Pelajari HTML dari dasar, kenali setiap elemennya, lalu langsung praktik melalui playground interaktif.</p>
+                <div class="hero-actions">
+                    <a href="#dasar-html" class="btn btn-primary">Mulai Belajar</a>
+                    <a href="#playground" class="btn btn-secondary">Coba Playground</a>
                 </div>
-            `;
 
-            try {
-                const url = `${API_BASE}/fakelobyff?nickname=${encodeURIComponent(nickname)}`;
-                const response = await fetch(url);
+                <div class="stat-row">
+                    <div class="stat-card"><div class="stat-num">46+</div><div class="stat-label">Elemen</div></div>
+                    <div class="stat-card"><div class="stat-num">4</div><div class="stat-label">Contoh Interaktif</div></div>
+                    <div class="stat-card"><div class="stat-num">10</div><div class="stat-label">Soal Kuis</div></div>
+                    <div class="stat-card"><div class="stat-num">100%</div><div class="stat-label">Gratis Dipelajari</div></div>
+                </div>
+            </div>
 
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            <div class="code-preview">
+                <div class="code-preview-bar">
+                    <span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span>
+                    <span class="code-preview-title">contoh.html</span>
+                </div>
+                <pre><code><span class="tag">&lt;h1&gt;</span>Halo Dunia!<span class="tag">&lt;/h1&gt;</span>
+<span class="tag">&lt;p&gt;</span>Saya sedang belajar HTML.<span class="tag">&lt;/p&gt;</span></code></pre>
+                <div class="code-preview-result">
+                    <div class="code-preview-result-label">Hasil Tampilan</div>
+                    <h1 style="font-size:1.5rem;margin-bottom:8px;">Halo Dunia!</h1>
+                    <p style="margin:0;">Saya sedang belajar HTML.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-                const blob = await response.blob();
-                currentImageUrl = URL.createObjectURL(blob);
+    <!-- ===================== DASAR HTML ===================== -->
+    <section id="dasar-html">
+        <div class="wrap">
+            <div class="section-head">
+                <h2>Apa Itu HTML?</h2>
+                <p>HTML adalah bahasa markup yang digunakan untuk membuat struktur sebuah halaman website. Dengan HTML, kita menentukan bagian mana yang menjadi judul, paragraf, gambar, tombol, dan bagian-bagian lainnya.</p>
+            </div>
 
-                preview.innerHTML = `
-                    <img src="${currentImageUrl}" alt="Fake Lobby FF">
-                `;
+            <div class="basics-grid">
+                <div>
+                    <p>Kalau website diibaratkan seperti sebuah rumah, HTML adalah kerangkanya.</p>
+                    <ul class="analogy-list">
+                        <li><strong>HTML</strong> = struktur rumah (dinding, ruangan, pintu)</li>
+                        <li><strong>CSS</strong> = tampilan rumah (warna, gaya, dekorasi)</li>
+                        <li><strong>JavaScript</strong> = interaksi rumah (lampu bisa dinyalakan, pintu otomatis)</li>
+                    </ul>
+                    <p>Website ini fokus mempelajari HTML terlebih dahulu, sehingga penjelasan tentang CSS dan JavaScript hanya disinggung secara singkat.</p>
 
-                downloadWrapper.innerHTML = `
-                    <button class="btn-download" onclick="downloadImage()">
-                        <i class="ri-download-2-line"></i> Download Gambar
-                    </button>
-                `;
+                    <h3>Struktur Dasar HTML</h3>
+                    <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Halaman Saya&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Halo Dunia!&lt;/h1&gt;
+    &lt;p&gt;Ini adalah halaman HTML pertama saya.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                </div>
 
-                showToast('✅ Lobby FF berhasil dibuat!');
-
-            } catch (error) {
-                console.error(error);
-                preview.innerHTML = `
-                    <div class="preview-placeholder">
-                        <i class="ri-error-warning-fill" style="color:#f87171;"></i>
-                        <p>Gagal generate lobby</p>
-                        <p style="font-size:11px;color:var(--text-secondary);">Coba lagi nanti</p>
+                <div class="tag-explain">
+                    <div class="tag-explain-item">
+                        <code>&lt;!DOCTYPE html&gt;</code>
+                        <p>Menandakan bahwa dokumen menggunakan HTML5. Ini adalah baris pertama yang wajib ada di setiap halaman HTML.</p>
                     </div>
-                `;
-                showToast('❌ Gagal generate, coba lagi');
-            } finally {
-                isGenerating = false;
-                btn.classList.remove('loading');
-            }
-        }
+                    <div class="tag-explain-item">
+                        <code>&lt;html&gt;</code>
+                        <p>Merupakan elemen utama yang membungkus seluruh isi halaman HTML, dari awal sampai akhir.</p>
+                    </div>
+                    <div class="tag-explain-item">
+                        <code>&lt;head&gt;</code>
+                        <p>Berisi informasi tentang halaman yang tidak langsung ditampilkan, seperti judul tab dan pengaturan lainnya.</p>
+                    </div>
+                    <div class="tag-explain-item">
+                        <code>&lt;title&gt;</code>
+                        <p>Menentukan judul halaman yang biasanya muncul pada tab browser.</p>
+                    </div>
+                    <div class="tag-explain-item">
+                        <code>&lt;body&gt;</code>
+                        <p>Berisi seluruh konten yang benar-benar ditampilkan kepada pengguna, seperti teks, gambar, dan tombol.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-        function downloadImage() {
-            if (!currentImageUrl) {
-                showToast('⚠️ Generate dulu sebelum download');
-                return;
-            }
+    <!-- ===================== ELEMEN HTML ===================== -->
+    <section id="elemen-html">
+        <div class="wrap">
+            <div class="section-head">
+                <h2>Pelajari Elemen HTML</h2>
+                <p>Kenali elemen HTML satu per satu dan pahami fungsi serta cara penggunaannya. Klik kartu mana pun untuk melihat penjelasan lengkap.</p>
+            </div>
 
-            const link = document.createElement('a');
-            link.href = currentImageUrl;
-            link.download = `lobby_ff_${Date.now()}.png`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            showToast('⬇️ Download dimulai!');
-        }
+            <div class="elemen-controls">
+                <div class="search-box">
+                    <span aria-hidden="true">🔍</span>
+                    <label for="elementSearch" class="sr-only">Cari elemen HTML</label>
+                    <input type="text" id="elementSearch" placeholder="Cari elemen HTML... (contoh: gambar, judul, tautan)" autocomplete="off">
+                </div>
+                <div class="category-filters" id="categoryFilters" role="group" aria-label="Filter kategori elemen">
+                    <!-- diisi oleh JavaScript -->
+                </div>
+            </div>
 
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            const msg = document.getElementById('toastMsg');
-            msg.textContent = message;
-            toast.classList.add('show');
-            clearTimeout(toast._hideTimer);
-            toast._hideTimer = setTimeout(() => toast.classList.remove('show'), 2800);
-        }
+            <div class="element-grid" id="elementGrid">
+                <!-- diisi oleh JavaScript -->
+            </div>
+        </div>
+    </section>
 
-        function scrollToTop() {
-            document.getElementById('mainContent').scrollTop = 0;
-        }
+    <!-- ===================== PLAYGROUND ===================== -->
+    <section id="playground">
+        <div class="wrap">
+            <div class="section-head">
+                <h2>Coba HTML Langsung</h2>
+                <p>Tulis kode HTML di bawah ini dan lihat hasilnya secara langsung. Semua proses berjalan di perangkatmu, tidak ada data yang dikirim ke server mana pun.</p>
+            </div>
 
-        function openModal() {
-            document.getElementById('modalOverlay').classList.add('active');
-        }
+            <div class="playground-toolbar">
+                <button class="btn btn-primary btn-small" id="btnRun">▶ Jalankan</button>
+                <button class="btn btn-secondary btn-small" id="btnReset">↺ Reset</button>
+                <button class="btn btn-secondary btn-small" id="btnClear">🗑 Bersihkan</button>
+                <button class="btn btn-secondary btn-small" id="btnCopyPg">📋 Salin Kode</button>
+                <select class="example-select" id="exampleSelect" aria-label="Pilih contoh kode">
+                    <option value="">— Contoh —</option>
+                    <option value="sederhana">Halaman sederhana</option>
+                    <option value="judul">Judul dan paragraf</option>
+                    <option value="daftar">Daftar</option>
+                    <option value="tabel">Tabel</option>
+                    <option value="formulir">Formulir</option>
+                    <option value="profil">Profil sederhana</option>
+                </select>
+            </div>
 
-        function closeModal() {
-            document.getElementById('modalOverlay').classList.remove('active');
-        }
+            <div class="playground-grid">
+                <div class="pg-panel">
+                    <div class="pg-panel-bar"><span>Editor</span><span>HTML</span></div>
+                    <label for="htmlEditor" class="sr-only">Editor kode HTML</label>
+                    <textarea id="htmlEditor" spellcheck="false">&lt;h1&gt;Halo Dunia!&lt;/h1&gt;
+&lt;p&gt;Saya sedang belajar HTML.&lt;/p&gt;</textarea>
+                </div>
+                <div class="pg-panel">
+                    <div class="pg-panel-bar"><span>Hasil</span><span>Live Preview</span></div>
+                    <iframe id="htmlPreview" title="Hasil tampilan kode HTML" sandbox="allow-same-origin"></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
 
-        document.getElementById('modalOverlay').addEventListener('click', function(e) {
-            if (e.target === this) closeModal();
+    <!-- ===================== CONTOH PENGGUNAAN ===================== -->
+    <section id="contoh">
+        <div class="wrap">
+            <div class="section-head">
+                <h2>Contoh Penggunaan HTML</h2>
+                <p>Beberapa contoh lengkap yang menggabungkan beberapa elemen sekaligus, supaya kamu bisa melihat bagaimana elemen-elemen tersebut bekerja bersama dalam satu halaman.</p>
+            </div>
+
+            <div class="example-block">
+                <h3>Contoh 1 — Halaman Sederhana</h3>
+                <p>Halaman ini berisi judul, paragraf, tautan, dan gambar.</p>
+                <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Halaman Sederhana&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Selamat Datang&lt;/h1&gt;
+    &lt;p&gt;Ini adalah halaman HTML sederhana.&lt;/p&gt;
+    &lt;a href="https://www.contoh.com"&gt;Kunjungi Contoh&lt;/a&gt;
+    &lt;img src="gambar.jpg" alt="Contoh gambar pemandangan"&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                <div class="example-note"><strong>Penjelasan:</strong> Judul menggunakan <code>&lt;h1&gt;</code>, teks penjelasan menggunakan <code>&lt;p&gt;</code>, tautan menggunakan <code>&lt;a&gt;</code>, dan gambar menggunakan <code>&lt;img&gt;</code> yang dilengkapi atribut <code>alt</code>.</div>
+                <div class="example-actions"><button class="btn btn-secondary btn-small" data-example="sederhana">Coba di Playground</button></div>
+            </div>
+
+            <div class="example-block">
+                <h3>Contoh 2 — Daftar</h3>
+                <p>Contoh penggunaan daftar tidak berurutan dan daftar berurutan.</p>
+                <pre><code>&lt;h3&gt;Daftar Belanja&lt;/h3&gt;
+&lt;ul&gt;
+    &lt;li&gt;Beras&lt;/li&gt;
+    &lt;li&gt;Telur&lt;/li&gt;
+    &lt;li&gt;Sayur&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Langkah Memasak Mi Instan&lt;/h3&gt;
+&lt;ol&gt;
+    &lt;li&gt;Rebus air hingga mendidih&lt;/li&gt;
+    &lt;li&gt;Masukkan mi ke dalam air&lt;/li&gt;
+    &lt;li&gt;Tunggu selama 3 menit&lt;/li&gt;
+    &lt;li&gt;Tiriskan dan tambahkan bumbu&lt;/li&gt;
+&lt;/ol&gt;</code></pre>
+                <div class="example-note"><strong>Penjelasan:</strong> Gunakan <code>&lt;ul&gt;</code> saat urutan item tidak penting, seperti daftar belanja. Gunakan <code>&lt;ol&gt;</code> saat urutan penting, seperti langkah-langkah yang harus diikuti berurutan.</div>
+                <div class="example-actions"><button class="btn btn-secondary btn-small" data-example="daftar">Coba di Playground</button></div>
+            </div>
+
+            <div class="example-block">
+                <h3>Contoh 3 — Tabel</h3>
+                <p>Contoh tabel sederhana berisi data siswa.</p>
+                <pre><code>&lt;table&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th&gt;No&lt;/th&gt;
+            &lt;th&gt;Nama&lt;/th&gt;
+            &lt;th&gt;Nilai&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+        &lt;tr&gt;
+            &lt;td&gt;1&lt;/td&gt;
+            &lt;td&gt;Dina&lt;/td&gt;
+            &lt;td&gt;90&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;2&lt;/td&gt;
+            &lt;td&gt;Budi&lt;/td&gt;
+            &lt;td&gt;85&lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+                <div class="example-note"><strong>Penjelasan:</strong> <code>&lt;table&gt;</code> adalah wadah utamanya, <code>&lt;tr&gt;</code> membuat satu baris, <code>&lt;th&gt;</code> digunakan untuk judul kolom, dan <code>&lt;td&gt;</code> digunakan untuk data biasa.</div>
+                <div class="example-actions"><button class="btn btn-secondary btn-small" data-example="tabel">Coba di Playground</button></div>
+            </div>
+
+            <div class="example-block">
+                <h3>Contoh 4 — Formulir</h3>
+                <p>Contoh formulir pendaftaran sederhana.</p>
+                <pre><code>&lt;form&gt;
+    &lt;label for="nama"&gt;Nama&lt;/label&gt;
+    &lt;input type="text" id="nama" name="nama"&gt;
+
+    &lt;label for="email"&gt;Email&lt;/label&gt;
+    &lt;input type="email" id="email" name="email"&gt;
+
+    &lt;button type="submit"&gt;Kirim&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+                <p style="margin-top:20px;">Berikut tampilan formulir tersebut:</p>
+                <form class="demo-form" onsubmit="return false;">
+                    <div class="form-field"><label for="demo-nama">Nama</label><input type="text" id="demo-nama" name="nama"></div>
+                    <div class="form-field"><label for="demo-email">Email</label><input type="email" id="demo-email" name="email"></div>
+                    <button type="submit" class="btn btn-primary">Kirim</button>
+                </form>
+                <div class="example-note"><strong>Penjelasan:</strong> Setiap input memiliki <code>&lt;label&gt;</code> yang terhubung melalui pasangan atribut <code>for</code> dan <code>id</code> yang sama. Formulir ini hanya untuk latihan dan tidak benar-benar mengirim data ke mana pun.</div>
+                <div class="example-actions"><button class="btn btn-secondary btn-small" data-example="formulir">Coba di Playground</button></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== KUIS ===================== -->
+    <section id="kuis">
+        <div class="wrap">
+            <div class="section-head">
+                <h2>Uji Pemahamanmu</h2>
+                <p>Jawab 10 pertanyaan berikut untuk menguji seberapa jauh pemahamanmu tentang dasar-dasar HTML.</p>
+            </div>
+
+            <div class="quiz-wrap" id="quizWrap">
+                <!-- diisi oleh JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== PROGRES BELAJAR ===================== -->
+    <section id="progres">
+        <div class="wrap">
+            <div class="section-head">
+                <h2>Progres Belajar</h2>
+                <p>Pantau seberapa banyak elemen HTML yang sudah kamu pelajari dan kuis yang sudah kamu selesaikan.</p>
+            </div>
+
+            <div class="progress-grid">
+                <div class="progress-card"><div class="num" id="progElemCount">0</div><div class="label">Elemen Dipelajari</div></div>
+                <div class="progress-card"><div class="num" id="progPercent">0%</div><div class="label">Persentase Progres</div></div>
+                <div class="progress-card"><div class="num" id="progQuizCount">0</div><div class="label">Kuis Diselesaikan</div></div>
+            </div>
+
+            <div class="progress-bar-outer"><div class="progress-bar-inner" id="progressBarInner" style="width:0%"></div></div>
+            <p class="progress-text" id="progressText">0 dari 46 elemen dipelajari</p>
+
+            <div class="progress-actions">
+                <button class="btn btn-danger" id="btnResetProgress">Reset Progres</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== TENTANG ===================== -->
+    <section id="tentang">
+        <div class="wrap">
+            <div class="section-head"><h2>Tentang Website Ini</h2></div>
+            <div class="about-card">
+                <p>Website ini dibuat untuk membantu pemula memahami HTML dari dasar.</p>
+                <p style="margin-bottom:0;">Kamu bisa mempelajari elemen-elemen HTML satu per satu, melihat contoh kodenya, lalu mencoba menulis ulang kode tersebut sendiri di komputer atau ponselmu. Semakin sering berlatih, semakin mudah kamu memahami cara kerja setiap elemen HTML.</p>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="site-footer">
+    <div class="wrap">
+        <div class="brand-text">
+            <span class="brand-name">Belajar HTML</span>
+            <span class="brand-tagline">Belajar HTML dari nol dengan cara yang mudah dipahami.</span>
+        </div>
+        <p class="footer-copy">© 2026 Belajar HTML. Semua hak dilindungi.</p>
+    </div>
+</footer>
+
+<!-- ===================== MODAL: DETAIL ELEMEN ===================== -->
+<div class="modal-overlay" id="elementModal" role="dialog" aria-modal="true" aria-labelledby="modalTagName">
+    <div class="modal-box">
+        <div class="modal-header">
+            <div>
+                <div class="tag-name" id="modalTagName"></div>
+                <div id="modalElName" style="color:var(--muted);font-size:.9rem;"></div>
+            </div>
+            <button class="modal-close" id="modalCloseBtn" aria-label="Tutup">✕</button>
+        </div>
+        <div class="modal-section">
+            <h5>Fungsi</h5>
+            <p id="modalDesc" style="margin:0;"></p>
+        </div>
+        <div class="modal-section">
+            <h5>Contoh Kode</h5>
+            <pre><code id="modalExample"></code></pre>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" id="modalTryBtn">Coba di Playground</button>
+            <button class="btn btn-secondary" id="modalCloseBtn2">Tutup</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===================== MODAL: KONFIRMASI RESET ===================== -->
+<div class="modal-overlay" id="confirmModal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+    <div class="modal-box confirm-box">
+        <h3 id="confirmTitle" style="margin-bottom:8px;">Reset Progres?</h3>
+        <p>Tindakan ini akan menghapus semua progres belajarmu dan tidak bisa dibatalkan.</p>
+        <div class="confirm-actions">
+            <button class="btn btn-secondary" id="confirmCancelBtn">Batal</button>
+            <button class="btn btn-danger" id="confirmOkBtn">Ya, Reset</button>
+        </div>
+    </div>
+</div>
+
+<div id="toast-container" aria-live="polite"></div>
+
+<button id="backToTop" aria-label="Kembali ke atas" title="Kembali ke atas">↑</button>
+
+<script>
+(function () {
+    "use strict";
+
+    /* =========================================================
+       DATA ELEMEN HTML
+    ========================================================= */
+    const ELEMENTS = [
+        { tag:"<h1>", name:"Judul Utama", category:"Teks", desc:"Digunakan untuk membuat judul utama pada halaman. Biasanya hanya ada satu di setiap halaman.", example:"<h1>Halo Dunia!</h1>" },
+        { tag:"<h2>", name:"Judul Bagian", category:"Teks", desc:"Digunakan untuk membuat judul bagian yang lebih kecil dari judul utama.", example:"<h2>Tentang Kami</h2>" },
+        { tag:"<h3>", name:"Sub Judul", category:"Teks", desc:"Digunakan untuk membuat sub judul di dalam sebuah bagian.", example:"<h3>Layanan Kami</h3>" },
+        { tag:"<h4>", name:"Judul Tingkat 4", category:"Teks", desc:"Digunakan untuk judul dengan tingkat kepentingan lebih rendah dari h3.", example:"<h4>Detail Produk</h4>" },
+        { tag:"<h5>", name:"Judul Tingkat 5", category:"Teks", desc:"Digunakan untuk judul kecil, biasanya untuk label bagian yang sangat spesifik.", example:"<h5>Catatan Kecil</h5>" },
+        { tag:"<h6>", name:"Judul Tingkat 6", category:"Teks", desc:"Judul dengan ukuran terkecil dalam hierarki judul HTML.", example:"<h6>Keterangan Tambahan</h6>" },
+        { tag:"<p>", name:"Paragraf", category:"Teks", desc:"Digunakan untuk membuat paragraf atau blok teks biasa.", example:"<p>Ini adalah paragraf.</p>" },
+        { tag:"<strong>", name:"Teks Penting", category:"Teks", desc:"Menandai teks yang sangat penting. Biasanya ditampilkan tebal.", example:"<strong>Penting!</strong>" },
+        { tag:"<b>", name:"Teks Tebal", category:"Teks", desc:"Membuat teks tampil tebal tanpa makna tambahan seperti strong.", example:"<b>Teks tebal</b>" },
+        { tag:"<em>", name:"Teks Ditekankan", category:"Teks", desc:"Menandai teks yang ditekankan maknanya. Biasanya ditampilkan miring.", example:"<em>Sangat menarik</em>" },
+        { tag:"<i>", name:"Teks Miring", category:"Teks", desc:"Membuat teks tampil miring, misalnya untuk istilah asing.", example:"<i>Selamat datang</i>" },
+        { tag:"<mark>", name:"Teks Ditandai", category:"Teks", desc:"Menandai atau menyorot teks seperti menggunakan stabilo.", example:"<mark>kata kunci</mark>" },
+        { tag:"<small>", name:"Teks Kecil", category:"Teks", desc:"Membuat teks tampil lebih kecil, biasanya untuk catatan kaki.", example:"<small>Syarat berlaku</small>" },
+        { tag:"<del>", name:"Teks Dihapus", category:"Teks", desc:"Menandai teks yang sudah dihapus atau tidak berlaku lagi, tampil bergaris coret.", example:"<del>Rp100.000</del>" },
+        { tag:"<ins>", name:"Teks Disisipkan", category:"Teks", desc:"Menandai teks yang baru disisipkan atau ditambahkan, tampil bergaris bawah.", example:"<ins>Rp80.000</ins>" },
+        { tag:"<sub>", name:"Subskrip", category:"Teks", desc:"Membuat teks tampil kecil di bagian bawah, misalnya untuk rumus kimia.", example:"H<sub>2</sub>O" },
+        { tag:"<sup>", name:"Superskrip", category:"Teks", desc:"Membuat teks tampil kecil di bagian atas, misalnya untuk pangkat.", example:"5<sup>2</sup>" },
+        { tag:"<br>", name:"Ganti Baris", category:"Teks", desc:"Membuat baris baru tanpa memulai paragraf baru.", example:"Baris satu<br>Baris dua" },
+        { tag:"<hr>", name:"Garis Pemisah", category:"Teks", desc:"Membuat garis horizontal untuk memisahkan konten.", example:"<hr>" },
+        { tag:"<a>", name:"Tautan", category:"Media", desc:"Digunakan untuk membuat tautan yang bisa diklik pengguna untuk berpindah ke halaman atau alamat lain.", example:'<a href="https://contoh.com">Kunjungi</a>' },
+        { tag:"<img>", name:"Gambar", category:"Media", desc:"Digunakan untuk menampilkan gambar pada halaman. Atribut alt penting untuk aksesibilitas.", example:'<img src="foto.jpg" alt="Contoh foto">' },
+        { tag:"<ul>", name:"Daftar Tidak Berurutan", category:"Daftar", desc:"Membuat daftar berbentuk bulatan, digunakan saat urutan item tidak penting.", example:"<ul>\n  <li>Item</li>\n</ul>" },
+        { tag:"<ol>", name:"Daftar Berurutan", category:"Daftar", desc:"Membuat daftar bernomor, digunakan saat urutan item penting seperti langkah-langkah.", example:"<ol>\n  <li>Langkah 1</li>\n</ol>" },
+        { tag:"<li>", name:"Item Daftar", category:"Daftar", desc:"Digunakan untuk setiap item di dalam daftar ul atau ol.", example:"<li>Item daftar</li>" },
+        { tag:"<table>", name:"Tabel", category:"Tabel", desc:"Wadah utama untuk membuat tabel berisi baris dan kolom.", example:"<table>...</table>" },
+        { tag:"<thead>", name:"Kepala Tabel", category:"Tabel", desc:"Mengelompokkan baris judul kolom pada tabel.", example:"<thead>\n  <tr><th>Nama</th></tr>\n</thead>" },
+        { tag:"<tbody>", name:"Isi Tabel", category:"Tabel", desc:"Mengelompokkan baris-baris data utama pada tabel.", example:"<tbody>\n  <tr><td>Data</td></tr>\n</tbody>" },
+        { tag:"<tr>", name:"Baris Tabel", category:"Tabel", desc:"Membuat satu baris di dalam tabel.", example:"<tr><td>Data</td></tr>" },
+        { tag:"<th>", name:"Judul Kolom", category:"Tabel", desc:"Membuat sel judul kolom pada tabel, biasanya tampil tebal.", example:"<th>Nama</th>" },
+        { tag:"<td>", name:"Sel Data", category:"Tabel", desc:"Membuat sel data biasa di dalam baris tabel.", example:"<td>Budi</td>" },
+        { tag:"<form>", name:"Formulir", category:"Formulir", desc:"Wadah utama untuk membuat formulir input dari pengguna.", example:"<form>...</form>" },
+        { tag:"<label>", name:"Label Input", category:"Formulir", desc:"Memberi keterangan pada elemen input agar mudah dipahami penggunanya.", example:'<label for="nama">Nama</label>' },
+        { tag:"<input>", name:"Input", category:"Formulir", desc:"Digunakan untuk membuat kolom isian seperti teks, email, atau kata sandi.", example:'<input type="text" id="nama">' },
+        { tag:"<textarea>", name:"Kotak Teks Panjang", category:"Formulir", desc:"Digunakan untuk membuat kolom isian teks yang panjang, seperti pesan.", example:"<textarea></textarea>" },
+        { tag:"<button>", name:"Tombol", category:"Formulir", desc:"Membuat tombol yang bisa diklik oleh pengguna.", example:"<button>Kirim</button>" },
+        { tag:"<select>", name:"Menu Pilihan", category:"Formulir", desc:"Membuat menu dropdown berisi beberapa pilihan.", example:"<select>\n  <option>Pilihan 1</option>\n</select>" },
+        { tag:"<option>", name:"Pilihan", category:"Formulir", desc:"Digunakan untuk setiap pilihan di dalam elemen select.", example:'<option value="a">Pilihan A</option>' },
+        { tag:"<div>", name:"Wadah Umum", category:"Struktur", desc:"Wadah umum tanpa makna khusus, digunakan untuk mengelompokkan konten dan mengatur tata letak.", example:'<div class="kotak">Konten</div>' },
+        { tag:"<span>", name:"Wadah Teks Sebaris", category:"Struktur", desc:"Wadah kecil tanpa makna khusus, digunakan untuk menandai sebagian teks dalam satu baris.", example:'<span class="tebal">teks</span>' },
+        { tag:"<header>", name:"Kepala Halaman", category:"Struktur", desc:"Menandai bagian kepala halaman atau bagian konten, biasanya berisi logo dan navigasi.", example:"<header>...</header>" },
+        { tag:"<nav>", name:"Navigasi", category:"Struktur", desc:"Menandai kumpulan tautan navigasi utama pada halaman.", example:"<nav>...</nav>" },
+        { tag:"<main>", name:"Konten Utama", category:"Struktur", desc:"Menandai konten utama halaman. Sebaiknya hanya ada satu elemen ini per halaman.", example:"<main>...</main>" },
+        { tag:"<section>", name:"Bagian", category:"Struktur", desc:"Mengelompokkan konten dengan topik yang sama, biasanya memiliki judulnya sendiri.", example:"<section>...</section>" },
+        { tag:"<article>", name:"Artikel", category:"Struktur", desc:"Menandai konten yang bisa berdiri sendiri, seperti postingan blog atau berita.", example:"<article>...</article>" },
+        { tag:"<aside>", name:"Konten Tambahan", category:"Struktur", desc:"Menandai konten tambahan yang bukan bagian utama, seperti sidebar.", example:"<aside>...</aside>" },
+        { tag:"<footer>", name:"Kaki Halaman", category:"Struktur", desc:"Menandai bagian penutup halaman, biasanya berisi hak cipta dan tautan tambahan.", example:"<footer>...</footer>" }
+    ];
+
+    const CATEGORIES = ["Semua", "Teks", "Media", "Daftar", "Tabel", "Formulir", "Struktur"];
+
+    /* alias kata kunci pencarian bahasa Indonesia -> istilah teknis */
+    const SEARCH_ALIASES = {
+        gambar: "img", foto: "img", tautan: "a", link: "a", judul: "h1 h2 h3 h4 h5 h6",
+        daftar: "ul ol li", tabel: "table thead tbody tr th td", formulir: "form input label button select option textarea",
+        paragraf: "p", tombol: "button", pilihan: "select option"
+    };
+
+    /* =========================================================
+       DATA CONTOH KODE PLAYGROUND
+    ========================================================= */
+    const EXAMPLES = {
+        sederhana: '<h1>Selamat Datang</h1>\n<p>Ini adalah halaman HTML sederhana.</p>\n<a href="https://www.contoh.com">Kunjungi Contoh</a>',
+        judul: '<h1>Judul Utama</h1>\n<h2>Judul Bagian</h2>\n<p>Ini adalah contoh paragraf di bawah judul.</p>',
+        daftar: '<h3>Daftar Belanja</h3>\n<ul>\n  <li>Beras</li>\n  <li>Telur</li>\n  <li>Sayur</li>\n</ul>\n\n<h3>Langkah Memasak Mi Instan</h3>\n<ol>\n  <li>Rebus air hingga mendidih</li>\n  <li>Masukkan mi ke dalam air</li>\n  <li>Tunggu selama 3 menit</li>\n</ol>',
+        tabel: '<table border="1" cellpadding="8">\n  <thead>\n    <tr><th>No</th><th>Nama</th><th>Nilai</th></tr>\n  </thead>\n  <tbody>\n    <tr><td>1</td><td>Dina</td><td>90</td></tr>\n    <tr><td>2</td><td>Budi</td><td>85</td></tr>\n  </tbody>\n</table>',
+        formulir: '<form>\n  <label for="nama">Nama</label><br>\n  <input type="text" id="nama"><br><br>\n  <label for="email">Email</label><br>\n  <input type="email" id="email"><br><br>\n  <button type="submit">Kirim</button>\n</form>',
+        profil: '<h1>Budi Santoso</h1>\n<p><em>Pelajar HTML Pemula</em></p>\n<p>Halo! Saya sedang belajar HTML menggunakan website ini.</p>\n<ul>\n  <li>Hobi: Membaca</li>\n  <li>Asal: Jakarta</li>\n</ul>'
+    };
+    const DEFAULT_CODE = "<h1>Halo Dunia!</h1>\n<p>Saya sedang belajar HTML.</p>";
+
+    /* =========================================================
+       DATA KUIS
+    ========================================================= */
+    const QUIZ = [
+        { q:"Apa fungsi elemen <p>?", options:["Membuat tabel","Membuat paragraf","Membuat gambar","Membuat tautan"], correct:1 },
+        { q:"Elemen apa yang digunakan untuk menampilkan gambar?", options:["<picture>","<image>","<img>","<src>"], correct:2 },
+        { q:"Apa fungsi elemen <a>?", options:["Membuat daftar","Membuat tautan yang bisa diklik","Membuat judul","Membuat tombol"], correct:1 },
+        { q:"Apa fungsi elemen <h1>?", options:["Membuat judul utama halaman","Membuat paragraf kecil","Membuat garis pemisah","Membuat kolom input"], correct:0 },
+        { q:"Elemen apa yang digunakan untuk membuat daftar tidak berurutan?", options:["<ol>","<li>","<ul>","<dl>"], correct:2 },
+        { q:"Apa fungsi atribut href pada elemen <a>?", options:["Mengatur warna teks","Menentukan alamat tujuan tautan","Mengatur ukuran font","Menyisipkan gambar"], correct:1 },
+        { q:"Apa fungsi atribut src pada elemen <img>?", options:["Menentukan lokasi file gambar","Menentukan ukuran gambar","Menentukan warna gambar","Menentukan nama file"], correct:0 },
+        { q:"Apa fungsi atribut alt pada elemen <img>?", options:["Mengubah ukuran gambar","Memberi teks alternatif jika gambar gagal dimuat","Memberi bingkai pada gambar","Memutar gambar"], correct:1 },
+        { q:"Apa fungsi elemen <table>?", options:["Membuat formulir","Membuat daftar","Membuat tabel berisi baris dan kolom","Membuat navigasi"], correct:2 },
+        { q:"Apa fungsi elemen <form>?", options:["Menampilkan gambar","Membuat wadah untuk formulir input dari pengguna","Membuat judul halaman","Membuat garis pemisah"], correct:1 }
+    ];
+
+    /* =========================================================
+       STATE & LOCALSTORAGE
+    ========================================================= */
+    const STORAGE_KEYS = { learned: "belajarhtml_learned", quizCount: "belajarhtml_quizcount", theme: "belajarhtml_theme" };
+
+    function loadLearned() {
+        try { return new Set(JSON.parse(localStorage.getItem(STORAGE_KEYS.learned) || "[]")); }
+        catch (e) { return new Set(); }
+    }
+    function saveLearned(set) {
+        try { localStorage.setItem(STORAGE_KEYS.learned, JSON.stringify(Array.from(set))); } catch (e) {}
+    }
+    function loadQuizCount() {
+        try { return parseInt(localStorage.getItem(STORAGE_KEYS.quizCount) || "0", 10) || 0; }
+        catch (e) { return 0; }
+    }
+    function incrementQuizCount() {
+        const n = loadQuizCount() + 1;
+        try { localStorage.setItem(STORAGE_KEYS.quizCount, String(n)); } catch (e) {}
+        return n;
+    }
+
+    let learnedSet = loadLearned();
+    let currentCategory = "Semua";
+    let currentSearch = "";
+
+    /* =========================================================
+       TOAST
+    ========================================================= */
+    function showToast(message, type) {
+        const container = document.getElementById("toast-container");
+        const toast = document.createElement("div");
+        toast.className = "toast" + (type ? " " + type : "");
+        toast.textContent = message;
+        container.appendChild(toast);
+        requestAnimationFrame(() => toast.classList.add("show"));
+        setTimeout(() => {
+            toast.classList.remove("show");
+            setTimeout(() => toast.remove(), 300);
+        }, 2600);
+    }
+
+    /* =========================================================
+       ESCAPE HTML (untuk menampilkan kode sebagai teks)
+    ========================================================= */
+    function escapeHtml(str) {
+        return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
+    /* =========================================================
+       MOBILE NAVIGATION
+    ========================================================= */
+    function initMobileNav() {
+        const menuToggle = document.getElementById("menuToggle");
+        const panel = document.getElementById("mobileNavPanel");
+        menuToggle.addEventListener("click", () => {
+            const isOpen = panel.classList.toggle("open");
+            menuToggle.setAttribute("aria-expanded", String(isOpen));
+            menuToggle.textContent = isOpen ? "✕" : "☰";
+        });
+        panel.querySelectorAll("a").forEach(link => {
+            link.addEventListener("click", () => {
+                panel.classList.remove("open");
+                menuToggle.setAttribute("aria-expanded", "false");
+                menuToggle.textContent = "☰";
+            });
+        });
+    }
+
+    /* =========================================================
+       THEME TOGGLE
+    ========================================================= */
+    function initTheme() {
+        const body = document.body;
+        const toggle = document.getElementById("themeToggle");
+        let saved = "dark";
+        try { saved = localStorage.getItem(STORAGE_KEYS.theme) || "dark"; } catch (e) {}
+        applyTheme(saved);
+
+        toggle.addEventListener("click", () => {
+            const current = body.getAttribute("data-theme");
+            const next = current === "dark" ? "light" : "dark";
+            applyTheme(next);
+            try { localStorage.setItem(STORAGE_KEYS.theme, next); } catch (e) {}
         });
 
-        document.getElementById('lobbyNick').addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') generateLobby();
+        function applyTheme(mode) {
+            body.setAttribute("data-theme", mode);
+            toggle.textContent = mode === "dark" ? "🌙" : "☀️";
+            toggle.setAttribute("aria-label", mode === "dark" ? "Ganti ke Mode Terang" : "Ganti ke Mode Gelap");
+        }
+    }
+
+    /* =========================================================
+       SCROLL: active nav + back to top
+    ========================================================= */
+    function initScrollBehavior() {
+        const backToTop = document.getElementById("backToTop");
+        window.addEventListener("scroll", () => {
+            backToTop.classList.toggle("show", window.scrollY > 500);
+        }, { passive: true });
+        backToTop.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+
+        const navLinks = document.querySelectorAll(".main-nav a");
+        const sections = Array.from(navLinks).map(a => document.querySelector(a.getAttribute("href"))).filter(Boolean);
+        if ("IntersectionObserver" in window && sections.length) {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = "#" + entry.target.id;
+                        navLinks.forEach(a => a.classList.toggle("active", a.getAttribute("href") === id));
+                    }
+                });
+            }, { rootMargin: "-40% 0px -50% 0px" });
+            sections.forEach(sec => observer.observe(sec));
+        }
+    }
+
+    /* =========================================================
+       ELEMEN HTML: render, search, filter
+    ========================================================= */
+    function initElements() {
+        const filterContainer = document.getElementById("categoryFilters");
+        CATEGORIES.forEach(cat => {
+            const btn = document.createElement("button");
+            btn.className = "filter-btn" + (cat === "Semua" ? " active" : "");
+            btn.textContent = cat;
+            btn.type = "button";
+            btn.addEventListener("click", () => {
+                currentCategory = cat;
+                filterContainer.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+                btn.classList.add("active");
+                renderElements();
+            });
+            filterContainer.appendChild(btn);
         });
 
-        console.log('🔥 DUMMY Tools Tools - Fake Lobby FF');
-    </script>
+        const searchInput = document.getElementById("elementSearch");
+        searchInput.addEventListener("input", () => {
+            currentSearch = searchInput.value.trim().toLowerCase();
+            renderElements();
+        });
+
+        renderElements();
+    }
+
+    function matchesSearch(el, query) {
+        if (!query) return true;
+        const haystack = (el.tag + " " + el.name + " " + el.desc).toLowerCase();
+        if (haystack.includes(query)) return true;
+        const alias = SEARCH_ALIASES[query];
+        if (alias && alias.split(" ").some(term => el.tag.toLowerCase().includes(term))) return true;
+        return false;
+    }
+
+    function renderElements() {
+        const grid = document.getElementById("elementGrid");
+        grid.innerHTML = "";
+
+        const filtered = ELEMENTS.filter(el => {
+            const categoryOk = currentCategory === "Semua" || el.category === currentCategory;
+            return categoryOk && matchesSearch(el, currentSearch);
+        });
+
+        if (filtered.length === 0) {
+            const empty = document.createElement("div");
+            empty.className = "empty-state";
+            empty.textContent = "Elemen yang kamu cari tidak ditemukan.";
+            grid.appendChild(empty);
+            return;
+        }
+
+        filtered.forEach(el => {
+            const card = document.createElement("article");
+            card.className = "element-card" + (learnedSet.has(el.tag) ? " learned" : "");
+            card.tabIndex = 0;
+            card.setAttribute("role", "button");
+            card.setAttribute("aria-label", "Lihat detail elemen " + el.tag);
+
+            const badge = document.createElement("span");
+            badge.className = "learned-badge";
+            badge.textContent = "Dipelajari";
+            card.appendChild(badge);
+
+            const tagEl = document.createElement("div");
+            tagEl.className = "tag-name";
+            tagEl.textContent = el.tag;
+            card.appendChild(tagEl);
+
+            const nameEl = document.createElement("div");
+            nameEl.className = "el-name";
+            nameEl.textContent = el.name;
+            card.appendChild(nameEl);
+
+            const descEl = document.createElement("p");
+            descEl.className = "el-desc";
+            descEl.textContent = el.desc;
+            card.appendChild(descEl);
+
+            const tryBtn = document.createElement("button");
+            tryBtn.className = "btn btn-secondary btn-small card-try";
+            tryBtn.type = "button";
+            tryBtn.textContent = "Coba";
+            tryBtn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                openElementModal(el);
+            });
+            card.appendChild(tryBtn);
+
+            card.addEventListener("click", () => openElementModal(el));
+            card.addEventListener("keydown", (e) => {
+                if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openElementModal(el); }
+            });
+
+            grid.appendChild(card);
+        });
+    }
+
+    function markLearned(tag) {
+        if (!learnedSet.has(tag)) {
+            learnedSet.add(tag);
+            saveLearned(learnedSet);
+            updateProgressUI();
+            showToast("Progres berhasil diperbarui.", "success");
+        }
+        renderElements();
+    }
+
+    /* =========================================================
+       MODAL ELEMEN
+    ========================================================= */
+    let activeElementForModal = null;
+
+    function openElementModal(el) {
+        activeElementForModal = el;
+        document.getElementById("modalTagName").textContent = el.tag;
+        document.getElementById("modalElName").textContent = el.name + " · " + el.category;
+        document.getElementById("modalDesc").textContent = el.desc;
+        document.getElementById("modalExample").textContent = el.example;
+        const overlay = document.getElementById("elementModal");
+        overlay.classList.add("open");
+        document.getElementById("modalCloseBtn").focus();
+        markLearned(el.tag);
+    }
+
+    function closeElementModal() {
+        document.getElementById("elementModal").classList.remove("open");
+        activeElementForModal = null;
+    }
+
+    function initElementModal() {
+        document.getElementById("modalCloseBtn").addEventListener("click", closeElementModal);
+        document.getElementById("modalCloseBtn2").addEventListener("click", closeElementModal);
+        document.getElementById("elementModal").addEventListener("click", (e) => {
+            if (e.target.id === "elementModal") closeElementModal();
+        });
+        document.getElementById("modalTryBtn").addEventListener("click", () => {
+            if (activeElementForModal) {
+                loadCodeIntoPlayground(activeElementForModal.example);
+                closeElementModal();
+                scrollToPlayground();
+                showToast("Contoh berhasil dimuat.", "success");
+            }
+        });
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") {
+                closeElementModal();
+                closeConfirmModal();
+            }
+        });
+    }
+
+    /* =========================================================
+       PLAYGROUND
+    ========================================================= */
+    function initPlayground() {
+        const editor = document.getElementById("htmlEditor");
+        const preview = document.getElementById("htmlPreview");
+
+        function runCode() {
+            preview.srcdoc = editor.value;
+        }
+
+        document.getElementById("btnRun").addEventListener("click", () => {
+            runCode();
+            showToast("Kode berhasil dijalankan.", "success");
+        });
+
+        document.getElementById("btnReset").addEventListener("click", () => {
+            editor.value = DEFAULT_CODE;
+            runCode();
+            showToast("Kode dikembalikan ke pengaturan awal.", "success");
+        });
+
+        document.getElementById("btnClear").addEventListener("click", () => {
+            editor.value = "";
+            runCode();
+            showToast("Editor berhasil dibersihkan.", "success");
+        });
+
+        document.getElementById("btnCopyPg").addEventListener("click", () => copyText(editor.value));
+
+        document.getElementById("exampleSelect").addEventListener("change", (e) => {
+            const key = e.target.value;
+            if (key && EXAMPLES[key]) {
+                loadCodeIntoPlayground(EXAMPLES[key]);
+                showToast("Contoh berhasil dimuat.", "success");
+            }
+            e.target.value = "";
+        });
+
+        document.querySelectorAll("[data-example]").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const key = btn.getAttribute("data-example");
+                if (EXAMPLES[key]) {
+                    loadCodeIntoPlayground(EXAMPLES[key]);
+                    scrollToPlayground();
+                    showToast("Contoh berhasil dimuat.", "success");
+                }
+            });
+        });
+
+        editor.addEventListener("input", debounce(runCode, 300));
+        runCode();
+    }
+
+    function loadCodeIntoPlayground(code) {
+        const editor = document.getElementById("htmlEditor");
+        editor.value = code;
+        document.getElementById("htmlPreview").srcdoc = code;
+    }
+
+    function scrollToPlayground() {
+        document.getElementById("playground").scrollIntoView({ behavior: "smooth" });
+    }
+
+    function debounce(fn, wait) {
+        let t;
+        return function (...args) {
+            clearTimeout(t);
+            t = setTimeout(() => fn.apply(this, args), wait);
+        };
+    }
+
+    /* =========================================================
+       COPY CODE (Clipboard API + fallback)
+    ========================================================= */
+    function copyText(text) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(
+                () => showToast("Kode berhasil disalin.", "success"),
+                () => fallbackCopy(text)
+            );
+        } else {
+            fallbackCopy(text);
+        }
+    }
+
+    function fallbackCopy(text) {
+        try {
+            const ta = document.createElement("textarea");
+            ta.value = text;
+            ta.style.position = "fixed";
+            ta.style.opacity = "0";
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand("copy");
+            document.body.removeChild(ta);
+            showToast("Kode berhasil disalin.", "success");
+        } catch (e) {
+            showToast("Gagal menyalin kode.", "error");
+        }
+    }
+
+    function initCodeBlockCopyButtons() {
+        document.querySelectorAll("pre").forEach(pre => {
+            if (pre.closest("#elementModal")) return;
+            const wrapper = document.createElement("div");
+            wrapper.className = "code-block-wrap";
+            pre.parentNode.insertBefore(wrapper, pre);
+            wrapper.appendChild(pre);
+
+            const btn = document.createElement("button");
+            btn.className = "btn btn-secondary btn-small copy-btn";
+            btn.type = "button";
+            btn.textContent = "Salin";
+            btn.addEventListener("click", () => {
+                const codeEl = pre.querySelector("code");
+                copyText(codeEl ? codeEl.textContent : pre.textContent);
+            });
+            wrapper.appendChild(btn);
+        });
+    }
+
+    /* =========================================================
+       KUIS
+    ========================================================= */
+    let quizIndex = 0;
+    let quizScore = 0;
+    let quizAnswered = false;
+
+    function renderQuiz() {
+        const wrap = document.getElementById("quizWrap");
+
+        if (quizIndex >= QUIZ.length) {
+            renderQuizResult(wrap);
+            return;
+        }
+
+        const item = QUIZ[quizIndex];
+        wrap.innerHTML = "";
+
+        const progressLabel = document.createElement("div");
+        progressLabel.className = "quiz-progress";
+        progressLabel.textContent = "Pertanyaan " + (quizIndex + 1) + " dari " + QUIZ.length;
+        wrap.appendChild(progressLabel);
+
+        const progressBarOuter = document.createElement("div");
+        progressBarOuter.className = "quiz-progress-bar";
+        const progressBarFill = document.createElement("div");
+        progressBarFill.className = "quiz-progress-fill";
+        progressBarFill.style.width = ((quizIndex) / QUIZ.length * 100) + "%";
+        progressBarOuter.appendChild(progressBarFill);
+        wrap.appendChild(progressBarOuter);
+
+        const questionEl = document.createElement("div");
+        questionEl.className = "quiz-question";
+        questionEl.textContent = item.q;
+        wrap.appendChild(questionEl);
+
+        const optionsEl = document.createElement("div");
+        optionsEl.className = "quiz-options";
+        item.options.forEach((opt, i) => {
+            const optBtn = document.createElement("button");
+            optBtn.type = "button";
+            optBtn.className = "quiz-option";
+            optBtn.textContent = opt;
+            optBtn.addEventListener("click", () => selectAnswer(i, item, optBtn, optionsEl));
+            optionsEl.appendChild(optBtn);
+        });
+        wrap.appendChild(optionsEl);
+
+        const footer = document.createElement("div");
+        footer.className = "quiz-footer";
+        const hint = document.createElement("span");
+        hint.className = "quiz-hint";
+        hint.id = "quizHint";
+        hint.textContent = "Silakan pilih jawaban terlebih dahulu.";
+        footer.appendChild(hint);
+
+        const nextBtn = document.createElement("button");
+        nextBtn.className = "btn btn-primary btn-small";
+        nextBtn.id = "quizNextBtn";
+        nextBtn.textContent = quizIndex === QUIZ.length - 1 ? "Lihat Skor" : "Lanjut";
+        nextBtn.disabled = true;
+        nextBtn.addEventListener("click", () => {
+            quizIndex++;
+            quizAnswered = false;
+            renderQuiz();
+        });
+        footer.appendChild(nextBtn);
+
+        wrap.appendChild(footer);
+    }
+
+    function selectAnswer(selectedIndex, item, optBtn, optionsEl) {
+        if (quizAnswered) return;
+        quizAnswered = true;
+
+        const buttons = optionsEl.querySelectorAll(".quiz-option");
+        buttons.forEach((b, i) => {
+            b.disabled = true;
+            if (i === item.correct) b.classList.add("correct");
+            else if (i === selectedIndex) b.classList.add("incorrect");
+        });
+
+        if (selectedIndex === item.correct) quizScore++;
+
+        const hint = document.getElementById("quizHint");
+        hint.textContent = selectedIndex === item.correct ? "Jawaban benar!" : "Kurang tepat, jawaban yang benar sudah ditandai.";
+        document.getElementById("quizNextBtn").disabled = false;
+    }
+
+    function renderQuizResult(wrap) {
+        const total = QUIZ.length;
+        const n = incrementQuizCount();
+        wrap.innerHTML = "";
+        wrap.className = "quiz-wrap quiz-result";
+
+        const title = document.createElement("h3");
+        title.textContent = "Kuis Selesai!";
+        wrap.appendChild(title);
+
+        const scoreNum = document.createElement("div");
+        scoreNum.className = "score-num";
+        scoreNum.textContent = "Skor kamu: " + quizScore + " / " + total;
+        wrap.appendChild(scoreNum);
+
+        const feedback = document.createElement("p");
+        feedback.textContent = quizScore >= total * 0.6
+            ? "Bagus! Kamu sudah memahami dasar HTML."
+            : "Jangan menyerah. Coba pelajari kembali elemen HTML lalu ulangi kuisnya.";
+        wrap.appendChild(feedback);
+
+        const restartBtn = document.createElement("button");
+        restartBtn.className = "btn btn-primary";
+        restartBtn.textContent = "Ulangi Kuis";
+        restartBtn.addEventListener("click", () => {
+            quizIndex = 0;
+            quizScore = 0;
+            quizAnswered = false;
+            wrap.className = "quiz-wrap";
+            renderQuiz();
+        });
+        wrap.appendChild(restartBtn);
+
+        updateProgressUI();
+        showToast("Kuis berhasil diselesaikan.", "success");
+    }
+
+    function initQuiz() {
+        renderQuiz();
+    }
+
+    /* =========================================================
+       PROGRES BELAJAR
+    ========================================================= */
+    function updateProgressUI() {
+        const total = ELEMENTS.length;
+        const learnedCount = learnedSet.size;
+        const percent = total === 0 ? 0 : Math.round((learnedCount / total) * 100);
+        const quizCount = loadQuizCount();
+
+        document.getElementById("progElemCount").textContent = String(learnedCount);
+        document.getElementById("progPercent").textContent = percent + "%";
+        document.getElementById("progQuizCount").textContent = String(quizCount);
+        document.getElementById("progressBarInner").style.width = percent + "%";
+        document.getElementById("progressText").textContent = learnedCount + " dari " + total + " elemen dipelajari";
+    }
+
+    function openConfirmModal() {
+        document.getElementById("confirmModal").classList.add("open");
+    }
+    function closeConfirmModal() {
+        document.getElementById("confirmModal").classList.remove("open");
+    }
+
+    function initProgress() {
+        updateProgressUI();
+        document.getElementById("btnResetProgress").addEventListener("click", openConfirmModal);
+        document.getElementById("confirmCancelBtn").addEventListener("click", closeConfirmModal);
+        document.getElementById("confirmModal").addEventListener("click", (e) => {
+            if (e.target.id === "confirmModal") closeConfirmModal();
+        });
+        document.getElementById("confirmOkBtn").addEventListener("click", () => {
+            learnedSet = new Set();
+            saveLearned(learnedSet);
+            try {
+                localStorage.setItem(STORAGE_KEYS.quizCount, "0");
+            } catch (e) {}
+            updateProgressUI();
+            renderElements();
+            closeConfirmModal();
+            showToast("Progres belajar berhasil direset.", "success");
+        });
+    }
+
+    /* =========================================================
+       INIT
+    ========================================================= */
+    document.addEventListener("DOMContentLoaded", () => {
+        initTheme();
+        initMobileNav();
+        initScrollBehavior();
+        initElements();
+        initElementModal();
+        initPlayground();
+        initCodeBlockCopyButtons();
+        initQuiz();
+        initProgress();
+    });
+})();
+</script>
 
 </body>
 </html>
